@@ -11,10 +11,11 @@ RUN apt-get update && apt-get install -y \
 
 # Place this after apt-get so it doesn't bust the cache
 ARG DUCKDB_VERSION
+ARG DUCKDB_ARCH
 
-RUN wget https://github.com/duckdb/duckdb/releases/download/${DUCKDB_VERSION}/duckdb_cli-linux-amd64.zip \
-    && unzip duckdb_cli-linux-amd64.zip -d /usr/local/bin \
-    && rm duckdb_cli-linux-amd64.zip
+RUN wget https://github.com/duckdb/duckdb/releases/download/${DUCKDB_VERSION}/duckdb_cli-linux-${DUCKDB_ARCH}.zip \
+    && unzip duckdb_cli-linux-${DUCKDB_ARCH}.zip -d /usr/local/bin \
+    && rm duckdb_cli-linux-${DUCKDB_ARCH}.zip
 
 # Create ~/.duckdbrc file
 # -----------------------
@@ -39,8 +40,11 @@ RUN for e in $EXTENSIONS; do \
 
 ARG PRQL_VERSION
 
-RUN duckdb -unsigned -c "SET custom_extension_repository='welsch.lu/duckdb/prql/$PRQL_VERSION'; INSTALL prql;" \
-    && echo "LOAD prql;" >> $HOME/.duckdbrc
+#RUN duckdb -unsigned -c "SET custom_extension_repository='welsch.lu/duckdb/prql/$PRQL_VERSION'; INSTALL prql;" \
+#RUN duckdb -unsigned -c "SET custom_extension_repository='welsch.lu/duckdb/prql/$PRQL_VERSION/linux_${DUCKDB_ARCH}'; INSTALL prql;" \
+#    && echo "LOAD prql;" >> $HOME/.duckdbrc
+RUN echo "PRQL Extension is not installed !!!!!!!!!!!!"
+
 
 # Add ducker.sh entrypoint
 COPY ducker.sh /usr/local/bin/ducker
